@@ -4,11 +4,15 @@ This is our foundation. We'll connect to Google's Gemini API and make our first 
 """
 
 from google import genai
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure the API
 # You'll need to get your API key from: https://aistudio.google.com/app/apikey
-API_KEY = "AIzaSyD4yG6Q01d-mqtZClduQg0-kWpMtYyaLK4"  # Replace this with your actual API key
-
+API_KEY = os.getenv("GEMINI_API_KEY")  # Replace this with your actual API key
 # Create a client instance
 client = genai.Client(api_key=API_KEY)
 

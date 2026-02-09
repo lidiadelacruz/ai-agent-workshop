@@ -4,9 +4,13 @@ Now the agent can remember previous messages in the conversation.
 """
 
 import google.generativeai as genai
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Load environment variables from .env file
 
 # Configure the API
-API_KEY = "AIzaSyD4yG6Q01d-mqtZClduQg0-kWpMtYyaLK4"  # Replace with your key
+API_KEY = os.getenv("GEMINI_API_KEY")  # Replace with your key
 genai.configure(api_key=API_KEY)
 
 

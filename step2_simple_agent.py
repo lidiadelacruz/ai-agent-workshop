@@ -4,11 +4,15 @@ Now we build an Agent class that can have conversations.
 """
 
 import google.generativeai as genai
+from dotenv import load_dotenv 
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure the API
-API_KEY = "AIzaSyD4yG6Q01d-mqtZClduQg0-kWpMtYyaLK4"  # Replace with your key
+API_KEY = os.getenv("GEMINI_API_KEY")  # Replace with your key
 genai.configure(api_key=API_KEY)
-
 
 class SimpleAgent:
     """A basic AI agent that can respond to messages"""
