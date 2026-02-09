@@ -1,0 +1,3 @@
+# Python dependencies for AI Agent Workshop
+google-generativeai>=0.3.0
+duckduckgo-search>=7.0.0
