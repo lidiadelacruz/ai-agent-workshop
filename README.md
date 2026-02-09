@@ -33,41 +33,58 @@ mkdir ai-agent-workshop
 cd ai-agent-workshop
 ```
 
-### 3. Create Virtual Environment
+### 3. Clone This Repository
+```bash
+git clone https://github.com/YOUR_USERNAME/ai-agent-workshop.git
+cd ai-agent-workshop
+```
+
+Or download and extract the ZIP file from GitHub.
+
+### 4. Create Virtual Environment
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-### 4. Install Dependencies
+### 5. Install Dependencies
 ```bash
-pip install google-generativeai duckduckgo-search
+pip install -r requirements.txt
 ```
 
-### 5. Get Gemini API Key
+### 6. Get Gemini API Key
 1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
 2. Click "Create API Key"
 3. Copy the key
 
-### 6. Test Your Setup
-Create `test.py`:
-```python
-import google.generativeai as genai
+### 7. Set Up Environment Variables
+**Create a `.env` file in the project root:**
 
-API_KEY = "YOUR_API_KEY_HERE"
-genai.configure(api_key=API_KEY)
-
-model = genai.GenerativeModel('gemini-2.5-flash')
-response = model.generate_content("Say hello!")
-print(response.text)
-```
-
-Run it:
 ```bash
-python test.py
+# On Mac/Linux
+cp .env.example .env
+
+# On Windows
+copy .env.example .env
 ```
 
-If you see a response, you're ready! ✓
+**Edit the `.env` file and add your API key:**
+
+```
+GEMINI_API_KEY=your_actual_api_key_here
+```
+
+**Important:** 
+- Never commit your `.env` file to Git (it's already in `.gitignore`)
+- The `.env` file keeps your API key secure and separate from your code
+
+### 8. Test Your Setup
+Run the test script:
+```bash
+python step1_setup.py
+```
+
+If you see a response from Gemini, you're ready! ✓
 
 ## Workshop Steps
 
@@ -123,6 +140,9 @@ python step5_complete_agent.py --interactive
 
 ```
 ai-agent-workshop/
+├── .env                     # Your API key (create this, never commit)
+├── .env.example             # Example env file (committed to Git)
+├── .gitignore              # Files to exclude from Git
 ├── step1_setup.py           # Basic API connection
 ├── step2_simple_agent.py    # Simple chat agent
 ├── step3_agent_memory.py    # Agent with memory
@@ -202,23 +222,77 @@ After completing the workshop, try adding:
 
 ### "Module not found" error
 ```bash
-pip install google-generativeai duckduckgo-search
+pip install -r requirements.txt
+```
+
+Make sure your virtual environment is activated (you should see `(venv)` in your terminal).
+
+### "API key not configured" or authentication errors
+1. Check that your `.env` file exists in the project root
+2. Verify the API key in `.env` is correct (no extra spaces or quotes)
+3. Make sure you're running Python from the same directory as `.env`
+4. Try printing the key to debug:
+```python
+import os
+from dotenv import load_dotenv
+load_dotenv()
+print(f"API Key loaded: {os.getenv('GEMINI_API_KEY')[:10]}...")  # Shows first 10 chars
 ```
 
 ### "Model not found" error
-Update the model name to `gemini-2.5-flash`
+Update the model name to `gemini-2.5-flash` or check available models:
+```python
+import google.generativeai as genai
+for model in genai.list_models():
+    if 'generateContent' in model.supported_generation_methods:
+        print(model.name)
+```
 
 ### Search not working
-DuckDuckGo sometimes has rate limits. Try:
-- Waiting a few seconds between searches
-- Using more specific queries
-- Checking your internet connection
+DuckDuckGo sometimes has rate limits or returns no results. The code includes mock fallback data for demos, so this shouldn't break your presentation.
 
 ### Virtual environment issues (Mac)
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
+
+### `.env` file not loading
+- Make sure it's named exactly `.env` (not `.env.txt`)
+- It should be in the same directory where you run Python
+- Check that `python-dotenv` is installed: `pip install python-dotenv`
+
+## Security Best Practices
+
+### Protecting Your API Key
+
+**Never commit your API key to Git!** This workshop uses environment variables to keep your key secure.
+
+✅ **DO:**
+- Store your API key in `.env` file (already in `.gitignore`)
+- Use `python-dotenv` to load the key
+- Share `.env.example` as a template (without real keys)
+
+❌ **DON'T:**
+- Hardcode API keys directly in Python files
+- Commit `.env` to Git
+- Share your API key publicly or in screenshots
+
+### What's Already Protected
+
+This repository includes:
+- `.gitignore` - Prevents `.env` from being committed
+- `.env.example` - Shows students what to create without exposing your key
+- Environment variable loading in all code files
+
+### If You Accidentally Commit Your API Key
+
+1. **Revoke it immediately** at [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Generate a new API key
+3. Update your `.env` file
+4. Use `git filter-branch` or BFG Repo-Cleaner to remove it from Git history
+
+---
 
 ## Next Steps
 
@@ -241,3 +315,4 @@ After the workshop:
 
 **Remember:** The goal isn't to memorize code, it's to understand how agents work so you can build your own!
 
+Happy coding! 🚀
